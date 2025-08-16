@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Moje gry na Androida</title>
+  <meta name="description" content="Portfolio – 10 małych gier na Androida. Pobierz APK bezpośrednio z GitHub Releases." />
+  <meta property="og:title" content="Moje gry na Androida" />
+  <meta property="og:description" content="Portfolio – 10 małych gier na Androida. Pobierz APK bezpośrednio z GitHub Releases." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --bg-elev: #12161b;
+      --text: #e8ebf0;
+      --muted: #aab3c2;
+      --accent: #60a5fa;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --maxw: 1100px;
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg:#f7f8fb; --bg-elev:#fff; --text:#0d1421; --muted:#4b5563; --shadow:0 10px 30px rgba(0,0,0,.08);} }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,'Noto Sans','Liberation Sans',sans-serif;background:radial-gradient(1200px 600px at 80% -10%, rgba(96,165,250,.15), transparent 60%), radial-gradient(800px 400px at 10% -10%, rgba(34,197,94,.12), transparent 60%), var(--bg);color:var(--text)}
+    header{position:sticky;top:0;z-index:10;background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,0));backdrop-filter:blur(6px)}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+    .hero{display:grid;gap:12px;align-items:center}
+    .title{font-size:clamp(28px,5vw,42px);letter-spacing:.2px;margin:0}
+    .subtitle{color:var(--muted);margin:0}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .input,.select{background:var(--bg-elev);color:var(--text);border:1px solid rgba(128,128,128,.25);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow)}
+    .input{flex:1 1 260px}
+    .btn{appearance:none;border:none;cursor:pointer;border-radius:999px;padding:10px 16px;background:var(--accent);color:#fff;font-weight:600;box-shadow:var(--shadow);transition:transform .12s ease, filter .12s ease}
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+    .btn:active{transform:translateY(0);filter:brightness(.98)}
+    .btn.secondary{background:transparent;color:var(--text);border:1px solid rgba(128,128,128,.35)}
+    main{padding-top:12px}
+    .grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:18px}
+    @media (min-width:640px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (min-width:960px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    .card{background:var(--bg-elev);border:1px solid rgba(128,128,128,.25);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:100%;transform:translateZ(0);transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease}
+    .card:hover{transform:translateY(-2px);border-color:rgba(128,128,128,.45)}
+    .thumb{aspect-ratio:16/9;width:100%;object-fit:cover;background:#0f172a}
+    .content{padding:16px;display:grid;gap:10px}
+    .h3{margin:0;font-size:18px;line-height:1.3}
+    .meta{font-size:13px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+    .desc{margin:0;color:var(--text);opacity:.92}
+    .actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:4px}
+    @media (min-width:420px){.actions{grid-template-columns:1fr 1fr}}
+    .cta{text-decoration:none;text-align:center;padding:10px 12px;border-radius:12px;font-weight:700}
+    .cta.primary{background:var(--accent);color:#fff}
+    .cta.secondary{background:transparent;border:1px solid rgba(128,128,128,.35);color:var(--text)}
+    footer{margin:40px 0 20px;color:var(--muted);text-align:center}
+    .small{font-size:12px}
+    .empty{text-align:center;color:var(--muted);padding:60px 10px}
+    .pill{padding:3px 8px;border-radius:999px;font-size:12px;border:1px solid rgba(128,128,128,.35)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container hero">
+      <h1 class="title">Moje gry na Androida</h1>
+      <p class="subtitle">10 małych projektów – <span class="pill">APK 30–60&nbsp;MB</span>. Pobierz bezpośrednio z GitHub Releases.</p>
+      <div class="controls">
+        <input id="q" class="input" type="search" placeholder="Szukaj gry (tytuł, tagi)…" aria-label="Szukaj gry" />
+        <select id="sort" class="select" aria-label="Sortowanie">
+          <option value="newest">Najnowsze</option>
+          <option value="name">Nazwa A→Z</option>
+          <option value="size">Rozmiar</option>
+        </select>
+        <button id="reset" class="btn secondary" type="button">Wyczyść</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="games" class="grid" aria-live="polite" aria-busy="false"></section>
+    <div id="empty" class="empty" hidden>Brak wyników. Zmień frazę lub filtr.</div>
+    <footer>
+      <p class="small">© <span id="year"></span> <span id="author">Twoje&nbsp;Imię</span>. Hostowane na GitHub Pages. Pliki APK są publikowane przez GitHub Releases.</p>
+    </footer>
+  </main>
+
+  <script>
+    // === KONFIGURACJA PORTFOLIO ===
+    const GH_USER = 'twoj-github-username'; // ← podmień
+    const APK_REPO = 'android-games'; // repo z APK (Releases)
+
+    // Dodaj swoje gry (przykłady – podmień/rozszerz do 10):
+    const GAMES = [
+      { id:'game-1', name:'Sky Runner', description:'Szybka endless‑runner z generowanymi trasami.', version:'1.0.0', sizeMB:42, date:'2025-01-15', cover:'https://placehold.co/800x450/png?text=Sky+Runner', tag:'sky-runner-v1.0.0', asset:'sky-runner-v1.0.0.apk', tags:['runner','arcade'] },
+      { id:'game-2', name:'Puzzlify',  description:'Łamigłówki logiczne z minimalistycznym stylem.', version:'1.2.0', sizeMB:35, date:'2025-02-10', cover:'https://placehold.co/800x450/png?text=Puzzlify',   tag:'puzzlify-v1.2.0',   asset:'puzzlify-v1.2.0.apk',   tags:['puzzle','offline'] }
+      // …dodaj kolejne obiekty gier
+    ];
+
+    function buildApkUrl(tag, asset){
+      return `https://github.com/${GH_USER}/${APK_REPO}/releases/download/${encodeURIComponent(tag)}/${encodeURIComponent(asset)}`;
+    }
+
+    const grid=document.getElementById('games');
+    const empty=document.getElementById('empty');
+    const q=document.getElementById('q');
+    const sort=document.getElementById('sort');
+    const reset=document.getElementById('reset');
+    document.getElementById('year').textContent=new Date().getFullYear();
+
+    function render(list){
+      grid.setAttribute('aria-busy','true');
+      grid.innerHTML='';
+      if(!list.length){empty.hidden=false;grid.setAttribute('aria-busy','false');return}
+      empty.hidden=true;
+      for(const g of list){
+        const apkUrl=g.apkUrl||buildApkUrl(g.tag,g.asset);
+        const card=document.createElement('article');
+        card.className='card';
+        card.innerHTML=`
+          <img loading="lazy" class="thumb" src="${g.cover}" alt="Okładka gry ${g.name}" />
+          <div class="content">
+            <h3 class="h3">${g.name}</h3>
+            <div class="meta">
+              <span title="Wersja">v${g.version}</span>
+              <span title="Rozmiar">~${g.sizeMB} MB</span>
+              <span title="Data wydania">${new Date(g.date).toLocaleDateString('pl-PL')}</span>
+            </div>
+            <p class="desc">${g.description}</p>
+            <div class="actions">
+              <a class="cta primary" href="${apkUrl}" download rel="noopener" aria-label="Pobierz APK ${g.name}">Pobierz APK</a>
+              ${g.page ? `<a class="cta secondary" href="${g.page}" target="_blank" rel="noopener">Strona gry</a>` : `<span class="cta secondary" aria-hidden="true" style="text-align:center;opacity:.65;">Wkrótce</span>`}
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      }
+      grid.setAttribute('aria-busy','false');
+    }
+
+    function filterAndSort(){
+      const term=q.value.trim().toLowerCase();
+      let list=GAMES.filter(g=>!term||g.name.toLowerCase().includes(term)||g.description.toLowerCase().includes(term)||(g.tags||[]).some(t=>t.toLowerCase().includes(term)));
+      const by=sort.value;
+      if(by==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+      if(by==='size') list.sort((a,b)=>(a.sizeMB||0)-(b.sizeMB||0));
+      if(by==='newest') list.sort((a,b)=>new Date(b.date)-new Date(a.date));
+      render(list);
+    }
+
+    q.addEventListener('input',filterAndSort);
+    sort.addEventListener('change',filterAndSort);
+    reset.addEventListener('click',()=>{q.value='';sort.value='newest';filterAndSort();q.focus()});
+
+    filterAndSort();
+  </script>
+
+  <!-- Instrukcja skrócona:
+  1) Repo "portfolio" → dodaj ten plik jako index.html → Settings → Pages → Deploy from a branch → main/root → Save.
+  2) Repo "android-games" → Releases → Draft a new release → tag + dodaj APK w Assets → Publish.
+  3) W tym pliku uzupełnij GH_USER, APK_REPO i tablicę GAMES (tag + asset).
+  4) Commit – strona sama się odświeży.
+  5) Własna domena: Settings → Pages → Custom domain + CNAME w DNS na {user}.github.io.
+  -->
+</body>
+</html>
